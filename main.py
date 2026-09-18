@@ -1,6 +1,24 @@
 from config import API_TOKEN
 import sqlite3
 import telebot
+import threading
+from flask import Flask
+
+app = Flask('')
+
+
+@app.route('/')
+def home():
+  return 'Bot is alive!'
+
+
+def run():
+  app.run(host='0.0.0.0', port=8080)
+
+
+def keep_alive():
+  t = threading.Thread(target=run)
+  t.start()
 
 bot = telebot.TeleBot(token = API_TOKEN)
 
@@ -110,8 +128,8 @@ def zero_cmd(message):
         bot.reply_to(message, f"لقد تم تصفير حسابك")
     else:
         bot.reply_to(message, "يجب عليك تسجيل الدخول من /start")
-
-
+        
+keep_alive()
     
 bot.polling()
 
